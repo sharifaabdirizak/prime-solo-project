@@ -3,8 +3,8 @@ const bodyParser = require('body-parser');
 const sessionMiddleware = require('./modules/session-middleware');
 const passport = require('./strategies/user.strategy');
 const userRouter = require('./routes/user.router');
-const journalEntriesRouter = require('./routes/journalentries.router');
-const passwordResetRouter = require('./routes/password-reset.router');
+const journalEntriesRouter = require('./routes/journal_entries.router');
+
 const pool = require('./database/pool');
 
 const app = express();
@@ -17,7 +17,7 @@ app.use(express.static('build'));
 
 // Routers
 app.use('/api/user', userRouter); 
-app.use('/api/journal-entries', journalEntriesRouter); 
+app.use('/api/journal_entries', journalEntriesRouter); 
 
 
 

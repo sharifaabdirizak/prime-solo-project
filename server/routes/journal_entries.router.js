@@ -1,6 +1,5 @@
 const express = require('express');
-const pool = require('../modules/pool'); 
-
+const pool = require('../modules/pool');
 const router = express.Router();
 
 // Create a new journal entry
@@ -9,7 +8,7 @@ router.post('/entries', (req, res) => {
     date,
     content,
     daily_affirmation,
-    user_id, 
+    user_id,
     is_related_to_love,
     is_related_to_confidence,
     is_related_to_self_esteem,
@@ -35,7 +34,7 @@ router.post('/entries', (req, res) => {
       date,
       content,
       daily_affirmation,
-      user_id, 
+      user_id,
       is_related_to_love,
       is_related_to_confidence,
       is_related_to_self_esteem,
@@ -47,16 +46,16 @@ router.post('/entries', (req, res) => {
       is_related_to_forgiveness,
     ])
     .then((result) => {
-      res.status(201)
-      console.log ('Journal entry created', id: result.rows[0].id );
+      console.log('Journal entry created, id:', result.rows[0].id);
+      res.send(result.rows);
     })
     .catch((error) => {
-      res.status(500)
-      console.error('error creating journal entry:', error);
+      console.error('Error creating journal entry:', error);
+      res.sendStatus(500);
     });
 });
 
-// get all journal entries from users
+// Get all journal entries for each user
 router.get('/entries/:user_id', (req, res) => {
   const user_id = req.params.user_id;
 
@@ -65,19 +64,20 @@ router.get('/entries/:user_id', (req, res) => {
   pool
     .query(queryText, [user_id])
     .then((result) => {
+      console.log('Retrieved journal entries for user:', user_id);
       res.send(result.rows);
     })
     .catch((error) => {
-      res.status(500)
-      console.error('error retrieving journal entry:', error);
+      console.error('Error retrieving journal entries:', error);
+      res.sendStatus(500); 
     });
 });
 
-// Update a journal entry by id
+// Update a journal entry by ID
 router.put('/entries/:id', (req, res) => {
   const entryId = req.params.id;
 
-  // Update the entry field in req.body
+  // Update the entry fields in the req.body
   const {
     date,
     content,
@@ -121,15 +121,16 @@ router.put('/entries/:id', (req, res) => {
       entryId,
     ])
     .then(() => {
-      res.status(200)
+      console.log('Journal entry updated, id:', entryId);
+      res.sendStatus(200);
     })
     .catch((error) => {
-      res.status(500);
-      console.error('error updating journal entry:', error);
+      console.error('Error updating journal entry:', error);
+      res.sendStatus(500);
     });
 });
 
-// Delete a journal entry by id
+// Delete a journal entry by ID
 router.delete('/entries/:id', (req, res) => {
   const entryId = req.params.id;
 
@@ -138,15 +139,13 @@ router.delete('/entries/:id', (req, res) => {
   pool
     .query(queryText, [entryId])
     .then(() => {
-      res.status(200);
+      console.log('Journal entry deleted, id:', entryId);
+      res.sendStatus(200);
     })
-    .catch((error) => {  
-      res.status(500);
-      console.error('error deleting journal entry:', error);
+    .catch((error) => {
+      console.error('Error deleting journal entry:', error);
+      res.sendStatus(500);
     });
 });
-
-
-
 
 module.exports = router;
