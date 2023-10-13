@@ -1,0 +1,49 @@
+app.post('/api/journal_entries', async (req, res) => {
+    try {
+      const entry = req.body;
+      const result = await createJournalEntry(entry);
+      res.sendStatus(201);
+    } catch (error) {
+      console.error(error);
+      res.status(500)
+      console.error('error occurred while creating a journal entry', error);
+    }
+  });
+  
+  app.get('/api/journal_entries', async (req, res) => {
+    try {
+      const entries = await getJournalEntries();
+      res.send(result.rows);
+    } catch (error) {
+      console.error(error);
+      res.status(500)
+      console.error('error occurred while retrieving  journal entries', error);
+      
+    }
+  });
+  
+  app.put('/api/journal_entries/:id', async (req, res) => {
+    try {
+      const id = req.params.id;
+      const entry = req.body;
+      const result = await updateJournalEntry(id, entry);
+      res.send(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500)
+      console.error('error occurred while updating a journal entry', error);
+    }
+  });
+  
+  app.delete('/api/journal_entries/:id', async (req, res) => {
+    try {
+      const id = req.params.id;
+      const result = await deleteJournalEntry(id);
+      res.sendStatus(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred while deleting a journal entry.' });
+    }
+  });
+  
+ 
